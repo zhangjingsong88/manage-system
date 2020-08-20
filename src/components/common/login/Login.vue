@@ -13,11 +13,18 @@
       >
         <!-- 用户名 -->
         <el-form-item prop="username">
-          <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
+          <el-input
+            prefix-icon="el-icon-user-solid"
+            v-model="loginForm.username"
+          ></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
-          <el-input prefix-icon="el-icon-lock" v-model="loginForm.password" type="password"></el-input>
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="loginForm.password"
+            type="password"
+          ></el-input>
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
@@ -29,14 +36,17 @@
   </div>
 </template>
 
+17508801877
 <script>
+//导入自定义方法
+import { login } from '@/network/login'
 export default {
   data() {
     return {
       // 表单数据绑定对象
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
       },
       // 验证规则对象
       LoginFormRules: {
@@ -44,9 +54,9 @@ export default {
         username: [
           { required: true, message: '请输入登录名称', trigger: 'blur' },
           {
-            min: 5,
+            min: 3,
             max: 15,
-            message: '长度在 2 到 15 个字符',
+            message: '长度在 3 到 15 个字符',
             trigger: 'blur',
           },
         ],
@@ -74,14 +84,22 @@ export default {
     // 点击登录验证
     ValidateLogin() {
       this.$refs.LoginFormRef.validate((valid) => {
-        console.log(valid)
+        // 判断网络请求是否发送
+        if (!valid) return
+        login(this.loginForm)
+          .then((res) => {
+            console.log(res)
+            // 登录成功
+            this.$message.success('登录成功')
+            window.sessionStorage.setItem('token', res.data.token)
+            this.$router.push('/home')
+          })
+          // 登录失败
+          .catch((err) => {
+            this.$message.error('登陆失败')
+          })
       })
     },
-    /**
-     * 网络请求相关方法
-     */
-    
-
   },
 }
 </script>
