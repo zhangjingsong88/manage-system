@@ -13,18 +13,11 @@
       >
         <!-- 用户名 -->
         <el-form-item prop="username">
-          <el-input
-            prefix-icon="el-icon-user-solid"
-            v-model="loginForm.username"
-          ></el-input>
+          <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
-          <el-input
-            prefix-icon="el-icon-lock"
-            v-model="loginForm.password"
-            type="password"
-          ></el-input>
+          <el-input prefix-icon="el-icon-lock" v-model="loginForm.password" type="password"></el-input>
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
@@ -36,7 +29,6 @@
   </div>
 </template>
 
-17508801877
 <script>
 //导入自定义方法
 import { login } from '@/network/login'
@@ -45,8 +37,8 @@ export default {
     return {
       // 表单数据绑定对象
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
       },
       // 验证规则对象
       LoginFormRules: {
@@ -86,12 +78,12 @@ export default {
       this.$refs.LoginFormRef.validate((valid) => {
         // 判断网络请求是否发送
         if (!valid) return
-        login(this.loginForm)
+        login(this.loginForm.username, this.loginForm.password)
           .then((res) => {
-            console.log(res)
+            // console.log(res);
             // 登录成功
             this.$message.success('登录成功')
-            window.sessionStorage.setItem('token', res.data.token)
+            window.sessionStorage.setItem('token', res.data)
             this.$router.push('/home')
           })
           // 登录失败
